@@ -1,1 +1,27 @@
-Hello World
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>2048 tile game</title>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="js/2048_tile/Tile.js"></script>
+	<script type="text/javascript" src="js/2048_tile/TileMove.js"></script>
+	<script type="text/javascript" src="js/2048_tile/TileConfig.js"></script>
+	<style type="text/css">
+	#tile {
+		border: 1px solid black;
+	}
+	</style>
+</head>
+<body>
+	<canvas id="tile" ></canvas>
+</body>
+<script type="text/javascript" >
+var tile;
+$(document).ready(function() {
+	var config = new tileConfig({ target : '#tile'});
+	tile = new Tile(config).init(); 
+});
+</script>
+</html>
+
