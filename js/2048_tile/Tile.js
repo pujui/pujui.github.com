@@ -1,4 +1,7 @@
-
+/**
+ * Tile
+ * @author Kim's
+ */
 function Tile(config){
 	this.config = config;
 	// X 與 Y 長度
@@ -44,7 +47,7 @@ Tile.prototype.catchKeyDown = function( e ){
 			moveStatus = master.calculateMoveTop('trigger');
 		},
 		39 : function(){ // RIGHT
-			moveStatus = master.calculateMoveRight('trigger');
+			moveStatus = master.calculateMoveRight();
 		},
 		40 : function(){ // BOTTOM
 			moveStatus = master.calculateMoveBottom('trigger');
@@ -57,47 +60,43 @@ Tile.prototype.catchKeyDown = function( e ){
 	if(moveStatus == true){
 		this.createPoint();
 	}
+	this.moveClass.clearRecord();
 	this.render();
 }
 
-Tile.prototype.calculateMoveRight = function(action, x, y){
-	if(action == 'trigger'){
-		var local = {x : 0, y : 0};
-		var moveStatus, checkStatus = false;
-		for(var x = 0; x < this.config.tilePoint.x; x++){
-			for(var y = 0; y < this.config.tilePoint.y; y++){
-				local.x = this.config.tilePoint.x - x - 1;
-				local.y = this.config.tilePoint.y - y - 1;
-				if(this.area[local.x][local.y] > 0){
-					checkStatus = this.calculateMoveRight('', local.x, local.y);
-					if(checkStatus === true){
-						moveStatus = true;
-					}
-				}
+Tile.prototype.calculateMoveRight = function(){
+	var local = {x : 0, y : 0};
+	var moveStatus, checkStatus = false;
+	for(var x = 0; x < this.config.tilePoint.x; x++){
+		for(var y = 0; y < this.config.tilePoint.y; y++){
+			local.x = this.config.tilePoint.x - x - 1;
+			local.y = this.config.tilePoint.y - y - 1;
+			if(this.area[local.x][local.y] < 1){
+				continue;
+			}
+			checkStatus = this._calculateMoveRight(local.x, local.y);
+			if(checkStatus === true){
+				moveStatus = true;
 			}
 		}
-		return moveStatus;
 	}
-	// 該位置無值, 不需移動
-	if(this.area[x][y] == 0){
+	return moveStatus;
+}
+
+Tile.prototype._calculateMoveRight = function(x, y){
+	var local = {x : x, y : y};
+	var moveRecord = {x : x, y : y};
+	var moveAction;
+	if(!this.moveClass.checkLocalMove(local, y, this.config.tilePoint.y-1)){
 		return false;
 	}
-	// 已無法移動
-	if(y == this.config.tilePoint.y-1){
-		return false;
-	}
-	// 紀錄目前位置
-	var moveTo = y;
 	for(var i = y; i < this.config.tilePoint.y; i++){
-		// 可移動置該位置
-		if(this.area[x][i+1] == 0){
-			moveTo = i+1;
-		}else if(this.area[x][i+1] == this.area[x][y]){
-			moveTo = i+1;
-			this.area[x][y]*=2;
+		moveAction = this.moveClass.doMoveAction(local, {x:x, y:i+1}, moveRecord);
+		if(moveAction !== this.moveClass.moveDefine.space){
+			break;
 		}
 	}
-	return this.moveClass.merge({x:x, y:y}, {x:x, y:moveTo});
+	return this.moveClass.merge(local, moveRecord);
 }
 
 Tile.prototype.calculateMoveLeft = function(action, x, y){
@@ -118,28 +117,25 @@ Tile.prototype.calculateMoveLeft = function(action, x, y){
 		}
 		return moveStatus;
 	}
-	// 該位置無值, 不需移動
-	if(this.area[x][y] == 0){
-		return false;
-	}
-	// 已無法移動
-	if(y == 0){
-		return false;
-	}
+	
 	// 紀錄目前位置
-	var moveTo = y;
+	var local = {x : x, y : y};
+	var moveRecord = {x : x, y : y};
+	var moveAction;
+	
+	if(!this.moveClass.checkLocalMove(local, y, 0)){
+		return false;
+	}
+	
 	for(var i = y; i > 0; i--){
-		// 可移動置該位置
-		if(this.area[x][i-1] == 0){
-			moveTo = i-1;
-		}else if(this.area[x][i-1] == this.area[x][y]){
-			moveTo = i-1;
-			this.area[x][y]*=2;
+		moveAction = this.moveClass.doMoveAction(local, {x:x, y:i-1}, moveRecord);
+		if(moveAction !== this.moveClass.moveDefine.space){
+			break;
 		}
 	}
-	return this.moveClass.merge({x:x, y:y}, {x:x, y:moveTo});
+	
+	return this.moveClass.merge(local, moveRecord);
 }
-
 
 Tile.prototype.calculateMoveTop = function(action, x, y){
 	if(action == 'trigger'){
@@ -159,26 +155,23 @@ Tile.prototype.calculateMoveTop = function(action, x, y){
 		}
 		return moveStatus;
 	}
-	// 該位置無值, 不需移動
-	if(this.area[x][y] == 0){
-		return false;
-	}
-	// 已無法移動
-	if(x == 0){
-		return false;
-	}
+	
 	// 紀錄目前位置
-	var moveTo = x;
+	var local = {x : x, y : y};
+	var moveRecord = {x : x, y : y};
+	var moveAction;
+	
+	if(!this.moveClass.checkLocalMove(local, x, 0)){
+		return false;
+	}
+	
 	for(var i = x; i > 0; i--){
-		// 可移動置該位置
-		if(this.area[i-1][y] == 0){
-			moveTo = i-1;
-		}else if(this.area[i-1][y] == this.area[x][y]){
-			moveTo = i-1;
-			this.area[x][y]*=2;
+		moveAction = this.moveClass.doMoveAction(local, {x:i-1, y:y}, moveRecord);
+		if(moveAction !== this.moveClass.moveDefine.space){
+			break;
 		}
 	}
-	return this.moveClass.merge({x:x, y:y}, {x:moveTo, y:y});
+	return this.moveClass.merge(local, moveRecord);
 }
 
 Tile.prototype.calculateMoveBottom = function(action, x, y){
@@ -199,39 +192,34 @@ Tile.prototype.calculateMoveBottom = function(action, x, y){
 		}
 		return moveStatus;
 	}
-	// 該位置無值, 不需移動
-	if(this.area[x][y] == 0){
-		return false;
-	}
-	// 已無法移動
-	if(x == this.config.tilePoint.x-1){
-		return false;
-	}
+	
 	// 紀錄目前位置
-	var moveTo = x;
+	var local = {x : x, y : y};
+	var moveRecord = {x : x, y : y};
+	var moveAction;
+	
+	if(!this.moveClass.checkLocalMove(local, x, this.config.tilePoint.x-1)){
+		return false;
+	}
+	
 	for(var i = x; i < this.config.tilePoint.x; i++){
 		// 已無法移動
 		if(i == this.config.tilePoint.x-1){
 			break;
 		}
-		// 可移動置該位置
-		if(this.area[i+1][y] == 0){
-			moveTo = i+1;
-		}else if(this.area[i+1][y] == this.area[x][y]){
-			moveTo = i+1;
-			this.area[x][y]*=2;
+		moveAction = this.moveClass.doMoveAction(local, {x:i+1, y:y}, moveRecord);
+		if(moveAction !== this.moveClass.moveDefine.space){
+			break;
 		}
 	}
-	return this.moveClass.merge({x:x, y:y}, {x:moveTo, y:y});
+	
+	return this.moveClass.merge(local, moveRecord);
 }
 
 // 計算方塊的X與Y長度
 Tile.prototype.setCalculateLine = function(){
 	this.line.x = this.config.width/this.config.tilePoint.x;
 	this.line.y = this.config.height/this.config.tilePoint.y;
-	this.log('this.setCalculateLine');
-	this.log('LineX:').log(this.line.x);
-	this.log('LineY:').log(this.line.x);
 }
 
 /**
@@ -283,17 +271,46 @@ Tile.prototype.render = function(){
 	var context = this.node[0].getContext('2d');
 	for(var x = 0; x < this.config.tilePoint.x; x++){
 		for(var y = 0; y < this.config.tilePoint.y; y++){
-			if(this.area[x][y] > 0){
-				context.fillStyle = this.config.valueBgColor;
-				context.fillRect(y * this.line.x , x * this.line.y, this.line.x, this.line.y);
-				context.fillStyle = this.config.textColor;
-				context.font = "30px Georgia";
-				context.fillText(this.area[x][y], ( y + this.config.textLocalPower.x ) * this.line.x, ( x + this.config.textLocalPower.y ) * this.line.y);
-			}else{
-				context.fillStyle = this.config.bgColor;
-				context.fillRect(y * this.line.x , x * this.line.y, this.line.x, this.line.y);
-			}
+			this._createDiagram(context, x, y);
 		}
+	}
+}
+
+// 繪製圖形
+Tile.prototype._createDiagram = function(context, x, y){
+	// 邊框建立
+	context.fillStyle = this.config.LineColor;
+	context.fillRect(
+		y * this.line.x,
+		x * this.line.y,
+		this.line.x,
+		this.line.y
+	);
+	if(this.area[x][y] > 0){
+		// 數值內容建立
+		context.fillStyle = this.config.valueBgColor;
+		context.fillRect(
+			y * this.line.x - this.config.LineWeight,
+			x * this.line.y - this.config.LineWeight,
+			this.line.x - this.config.LineWeight,
+			this.line.y - this.config.LineWeight
+		);
+		context.fillStyle = this.config.textColor;
+		context.font = "30px Georgia";
+		context.fillText(
+			this.area[x][y],
+			( y + this.config.textLocalPower.x ) * this.line.x,
+			( x + this.config.textLocalPower.y ) * this.line.y
+		);
+	}else{
+		// 空值內容建立
+		context.fillStyle = this.config.bgColor;
+		context.fillRect(
+			y * this.line.x - this.config.LineWeight,
+			x * this.line.y - this.config.LineWeight,
+			this.line.x - this.config.LineWeight,
+			this.line.y - this.config.LineWeight
+		);
 	}
 }
 
