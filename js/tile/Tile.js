@@ -34,6 +34,16 @@ Tile.prototype.init = function(){
 	this.render();
 	return this;
 }
+Tile.prototype.setDegreeOfDifficulty = function( event, target ){
+	var action = $(event).val();
+	if(action == '+'){
+		this.config.number *= 2;
+	}else if(action == '-'){
+		this.config.number /= 2;
+	}
+	$(target).val(this.config.number);
+	this.log();
+}
 
 // 抓取移動事件
 Tile.prototype.catchKeyDown = function( e ){
@@ -62,6 +72,7 @@ Tile.prototype.catchKeyDown = function( e ){
 	}
 	this.moveClass.clearRecord();
 	this.render();
+	this.processGameOver();
 }
 
 Tile.prototype.calculateMoveRight = function(){
@@ -302,6 +313,20 @@ Tile.prototype._createDiagram = function(context, x, y){
 			this.line.x - this.config.LineWeight,
 			this.line.y - this.config.LineWeight
 		);
+	}
+}
+
+Tile.prototype.processGameOver = function(){
+	var missionSucceed = false;
+	for(var x = 0; x < this.config.tilePoint.x; x++){
+		for(var y = 0; y < this.config.tilePoint.y; y++){
+			if(this.area[x][y] >= this.config.number){
+				missionSucceed = true;
+			}
+		}
+	}
+	if(missionSucceed === true){
+		alert('已完成目標!!');
 	}
 }
 

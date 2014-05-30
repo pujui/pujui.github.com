@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>2048 tile game</title>
+	<title>4096 tile game</title>
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src="js/tile/Tile.js"></script>
 	<script type="text/javascript" src="js/tile/TileMove.js"></script>
@@ -14,13 +14,19 @@
 	</style>
 </head>
 <body>
+	遊戲難度：<input type="text" readonly value="4096" id="number" />
+	<input type="button" value="+" class="dod" />
+	<input type="button" value="-" class="dod" />
+	<br/>
 	<canvas id="tile" ></canvas>
 </body>
 <script type="text/javascript" >
-var tile;
 $(document).ready(function() {
-	var config = new tileConfig({ target : '#tile'});
-	tile = new Tile(config).init(); 
+	var config = new tileConfig({ target : '#tile', number : 4096});
+	var tile = new Tile(config).init();
+	$('.dod').click(function(){
+		tile.setDegreeOfDifficulty(this, '#number');
+	});
 });
 </script>
 </html>
