@@ -21,7 +21,7 @@ Tile.prototype.init = function(){
 	this.node.attr('width', this.config.width);
 	this.node.attr('height', this.config.height);
 	// bind all event by keydown
-	$(window).on('keydown', $.proxy(this.catchKeyDown, this));
+	$(window).on('keydown', this.catchKeyDown.bind(this));
 	// 計算遊戲畫面大小
 	this.setCalculateLine();
 	// 初始化區域資料
@@ -76,8 +76,8 @@ Tile.prototype.catchKeyDown = function( e ){
 }
 
 Tile.prototype.calculateMoveRight = function(){
-	var local = {x : 0, y : 0};
-	var moveStatus, checkStatus = false;
+	var local = {x : 0, y : 0},
+	    moveStatus = false;
 	for(var x = 0; x < this.config.tilePoint.x; x++){
 		for(var y = 0; y < this.config.tilePoint.y; y++){
 			local.x = this.config.tilePoint.x - x - 1;
@@ -85,10 +85,7 @@ Tile.prototype.calculateMoveRight = function(){
 			if(this.area[local.x][local.y] < 1){
 				continue;
 			}
-			checkStatus = this._calculateMoveRight(local.x, local.y);
-			if(checkStatus === true){
-				moveStatus = true;
-			}
+			moveStatus = this._calculateMoveRight(local.x, local.y);
 		}
 	}
 	return moveStatus;
@@ -111,8 +108,8 @@ Tile.prototype._calculateMoveRight = function(x, y){
 }
 
 Tile.prototype.calculateMoveLeft = function(){
-	var local = {x : 0, y : 0};
-	var moveStatus, checkStatus = false;
+	var local = {x : 0, y : 0},
+	    moveStatus;
 	for(var x = 0; x < this.config.tilePoint.x; x++){
 		for(var y = 0; y < this.config.tilePoint.y; y++){
 			local.x = x;
@@ -120,10 +117,7 @@ Tile.prototype.calculateMoveLeft = function(){
 			if(this.area[local.x][local.y] < 1){
 				continue;
 			}
-			checkStatus = this._calculateMoveLeft(local.x, local.y);
-			if(checkStatus === true){
-				moveStatus = true;
-			}
+			moveStatus = this._calculateMoveLeft(local.x, local.y);
 		}
 	}
 	return moveStatus;
@@ -146,8 +140,8 @@ Tile.prototype._calculateMoveLeft = function(x, y){
 }
 
 Tile.prototype.calculateMoveTop = function(x, y){
-	var local = {x : 0, y : 0};
-	var moveStatus, checkStatus = false;
+	var local = {x : 0, y : 0},
+	    moveStatus = false;
 	for(var y = 0; y < this.config.tilePoint.y; y++){
 		for(var x = 0; x < this.config.tilePoint.x; x++){
 			local.x = x;
@@ -155,10 +149,7 @@ Tile.prototype.calculateMoveTop = function(x, y){
 			if(this.area[local.x][local.y] < 1){
 				continue;
 			}
-			checkStatus = this._calculateMoveTop(local.x, local.y);
-			if(checkStatus === true){
-				moveStatus = true;
-			}
+			moveStatus = this._calculateMoveTop(local.x, local.y);
 		}
 	}
 	return moveStatus;
@@ -181,8 +172,8 @@ Tile.prototype._calculateMoveTop = function(x, y){
 }
 
 Tile.prototype.calculateMoveBottom = function(x, y){
-	var local = {x : 0, y : 0};
-	var moveStatus, checkStatus = false;
+	var local = {x : 0, y : 0},
+	    moveStatus = false;
 	for(var y = 0; y < this.config.tilePoint.y; y++){
 		for(var x = 0; x < this.config.tilePoint.x; x++){
 			local.x = this.config.tilePoint.x - x - 1;
@@ -190,10 +181,7 @@ Tile.prototype.calculateMoveBottom = function(x, y){
 			if(this.area[local.x][local.y] < 1){
 				continue;
 			}
-			checkStatus = this._calculateMoveBottom(local.x, local.y);
-			if(checkStatus === true){
-				moveStatus = true;
-			}
+			moveStatus = this._calculateMoveBottom(local.x, local.y);
 		}
 	}
 	return moveStatus;
@@ -258,7 +246,7 @@ Tile.prototype.createPoint = function(){
 		var randNumber = this.randNumber(maxLength - 1);
 		var point = colloctSpacePoint[randNumber];
 		this.area[point.x][point.y] = this.config.tileNumbers[ this.randNumber(this.config.tileNumbers.length - 1)]
-		return true; 
+		return true;
 	}
 	return false;
 }
