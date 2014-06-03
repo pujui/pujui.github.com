@@ -21,7 +21,7 @@ Tile.prototype.init = function(){
 	this.node.attr('width', this.config.width);
 	this.node.attr('height', this.config.height);
 	// bind all event by keydown
-	$(window).on('keydown', $.proxy(this.catchKeyDown, this));
+	$(window).on('keydown', this.catchKeyDown.bind(this));
 	// 計算遊戲畫面大小
 	this.setCalculateLine();
 	// 初始化區域資料
@@ -258,7 +258,7 @@ Tile.prototype.createPoint = function(){
 		var randNumber = this.randNumber(maxLength - 1);
 		var point = colloctSpacePoint[randNumber];
 		this.area[point.x][point.y] = this.config.tileNumbers[ this.randNumber(this.config.tileNumbers.length - 1)]
-		return true; 
+		return true;
 	}
 	return false;
 }
