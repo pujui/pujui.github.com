@@ -4,11 +4,11 @@
  */
 function Tile(config){
 	this.config = config;
-	// X 與 Y 長度
+	// X and Y length
 	this.line = [];
-	// 圖形區塊資料
+	// Graph data
 	this.area = [];
-	// 移動物件
+	// Move object
 	this.moveClass = new TileMove(this);
 	return this;
 }
@@ -17,20 +17,20 @@ Tile.prototype.isDebug = true;
 
 Tile.prototype.init = function(){
 	this.node = $(this.config.target);
-	// 設定遊戲區域長寬
+	// Setting width and height the game area
 	this.node.attr('width', this.config.width);
 	this.node.attr('height', this.config.height);
-	// bind all event by keydown
+	// Bind all event by keydown
 	$(window).on('keydown', this.catchKeyDown.bind(this));
-	// 計算遊戲畫面大小
+	// Calculate width and height the game screen
 	this.setCalculateLine();
-	// 初始化區域資料
+	// Initalize the game area
 	this.createInitPoint();
-	// 建立初始點
+	// Initalize the point
 	for(var i = 0; i < 2; i++){
 		this.createPoint();
 	}
-	// 刷新介面
+	// Flash graph interface
 	this.render();
 	return this;
 }
@@ -45,7 +45,7 @@ Tile.prototype.setDegreeOfDifficulty = function( event, target ){
 	this.log();
 }
 
-// 抓取移動事件
+// Catch move event
 Tile.prototype.catchKeyDown = function( e ){
 	var master = this;
 	var moveStatus = false;
@@ -206,14 +206,14 @@ Tile.prototype._calculateMoveBottom = function(x, y){
 	return this.moveClass.merge(local, moveRecord);
 }
 
-// 計算方塊的X與Y長度
+// Calculate width and height the point
 Tile.prototype.setCalculateLine = function(){
 	this.line.x = this.config.width/this.config.tilePoint.x;
 	this.line.y = this.config.height/this.config.tilePoint.y;
 }
 
 /**
- * 建立圖形區塊
+ * Draw graph area
 	(Y)
 	|
 	|
@@ -231,7 +231,7 @@ Tile.prototype.createInitPoint = function(){
 	}
 }
 
-// 建立隨機位置
+// Create random location
 Tile.prototype.createPoint = function(){
 	var colloctSpacePoint = [];
 	for(var x = 0; x < this.config.tilePoint.x; x++){
@@ -251,12 +251,12 @@ Tile.prototype.createPoint = function(){
 	return false;
 }
 
-// 取隨機值
+// Set max-length to get a random number
 Tile.prototype.randNumber = function(maxLength){
 	return Math.floor( Math.random() * ( maxLength + 1 ) );
 }
 
-// 刷新canvas
+// Flash canvas
 Tile.prototype.render = function(){
 	var context = this.node[0].getContext('2d');
 	for(var x = 0; x < this.config.tilePoint.x; x++){
@@ -266,9 +266,9 @@ Tile.prototype.render = function(){
 	}
 }
 
-// 繪製圖形
+// Draw tile
 Tile.prototype._createDiagram = function(context, x, y){
-	// 邊框建立
+	// Draw graph border
 	context.fillStyle = this.config.LineColor;
 	context.fillRect(
 		y * this.line.x,
@@ -277,7 +277,7 @@ Tile.prototype._createDiagram = function(context, x, y){
 		this.line.y
 	);
 	if(this.area[x][y] > 0){
-		// 數值內容建立
+		// Draw graph number point
 		context.fillStyle = this.config.valueBgColor;
 		context.fillRect(
 			y * this.line.x - this.config.LineWeight,
@@ -293,7 +293,7 @@ Tile.prototype._createDiagram = function(context, x, y){
 			( x + this.config.textLocalPower.y ) * this.line.y
 		);
 	}else{
-		// 空值內容建立
+		// Draw graph empty point
 		context.fillStyle = this.config.bgColor;
 		context.fillRect(
 			y * this.line.x - this.config.LineWeight,
@@ -314,7 +314,7 @@ Tile.prototype.processGameOver = function(){
 		}
 	}
 	if(missionSucceed === true){
-		alert('已完成目標!!');
+		alert('MISSION SUCCESS!!');
 	}
 }
 
