@@ -21,9 +21,10 @@
 	<canvas id="tile" ></canvas>
 </body>
 <script type="text/javascript" >
+var tile;
 $(document).ready(function() {
 	var config = new tileConfig({ target : '#tile', number : 4096});
-	var tile = new Tile(config).init();
+	tile = new Tile(config).init();
 	$('.dod').click(function(){
 		tile.setDegreeOfDifficulty(this, '#number');
 	});

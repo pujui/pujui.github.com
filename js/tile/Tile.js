@@ -10,6 +10,7 @@ function Tile(config){
 	this.area = [];
 	// Move object
 	this.moveClass = new TileMove(this);
+	this.moveLogs = [];
 	return this;
 }
 
@@ -51,16 +52,16 @@ Tile.prototype.catchKeyDown = function( e ){
 	var moveStatus = false;
 	var action = {
 		37 : function(){ // LEFT
-			moveStatus = master.calculateMoveLeft();
+			moveStatus = master.moveClass.calculateMoveLeft();
 		},
 		38 : function(){ // TOP
-			moveStatus = master.calculateMoveTop();
+			moveStatus = master.moveClass.calculateMoveTop();
 		},
 		39 : function(){ // RIGHT
-			moveStatus = master.calculateMoveRight();
+			moveStatus = master.moveClass.calculateMoveRight();
 		},
 		40 : function(){ // BOTTOM
-			moveStatus = master.calculateMoveBottom();
+			moveStatus = master.moveClass.calculateMoveBottom();
 		},
 	};
 	if(!action[e.keyCode]){
@@ -70,141 +71,14 @@ Tile.prototype.catchKeyDown = function( e ){
 	if(moveStatus == true){
 		this.createPoint();
 	}
+	// clear the move record
 	this.moveClass.clearRecord();
-	this.render();
+	// active the move animation
+	this.moveClass.renderAnimation();
+	// check game mission success
 	this.processGameOver();
 }
 
-Tile.prototype.calculateMoveRight = function(){
-	var local = {x : 0, y : 0},
-	    moveStatus = false;
-	for(var x = 0; x < this.config.tilePoint.x; x++){
-		for(var y = 0; y < this.config.tilePoint.y; y++){
-			local.x = this.config.tilePoint.x - x - 1;
-			local.y = this.config.tilePoint.y - y - 1;
-			if(this.area[local.x][local.y] < 1){
-				continue;
-			}
-			moveStatus = this._calculateMoveRight(local.x, local.y);
-		}
-	}
-	return moveStatus;
-}
-
-Tile.prototype._calculateMoveRight = function(x, y){
-	var local = {x : x, y : y};
-	var moveRecord = {x : x, y : y};
-	var moveAction;
-	if(!this.moveClass.checkLocalMove(local, y, this.config.tilePoint.y-1)){
-		return false;
-	}
-	for(var i = y; i < this.config.tilePoint.y; i++){
-		moveAction = this.moveClass.doMoveAction(local, {x:x, y:i+1}, moveRecord);
-		if(moveAction !== this.moveClass.moveDefine.space){
-			break;
-		}
-	}
-	return this.moveClass.merge(local, moveRecord);
-}
-
-Tile.prototype.calculateMoveLeft = function(){
-	var local = {x : 0, y : 0},
-	    moveStatus;
-	for(var x = 0; x < this.config.tilePoint.x; x++){
-		for(var y = 0; y < this.config.tilePoint.y; y++){
-			local.x = x;
-			local.y = y;
-			if(this.area[local.x][local.y] < 1){
-				continue;
-			}
-			moveStatus = this._calculateMoveLeft(local.x, local.y);
-		}
-	}
-	return moveStatus;
-}
-
-Tile.prototype._calculateMoveLeft = function(x, y){
-	var local = {x : x, y : y};
-	var moveRecord = {x : x, y : y};
-	var moveAction;
-	if(!this.moveClass.checkLocalMove(local, y, 0)){
-		return false;
-	}
-	for(var i = y; i > 0; i--){
-		moveAction = this.moveClass.doMoveAction(local, {x:x, y:i-1}, moveRecord);
-		if(moveAction !== this.moveClass.moveDefine.space){
-			break;
-		}
-	}
-	return this.moveClass.merge(local, moveRecord);
-}
-
-Tile.prototype.calculateMoveTop = function(x, y){
-	var local = {x : 0, y : 0},
-	    moveStatus = false;
-	for(var y = 0; y < this.config.tilePoint.y; y++){
-		for(var x = 0; x < this.config.tilePoint.x; x++){
-			local.x = x;
-			local.y = y;
-			if(this.area[local.x][local.y] < 1){
-				continue;
-			}
-			moveStatus = this._calculateMoveTop(local.x, local.y);
-		}
-	}
-	return moveStatus;
-}
-
-Tile.prototype._calculateMoveTop = function(x, y){
-	var local = {x : x, y : y};
-	var moveRecord = {x : x, y : y};
-	var moveAction;
-	if(!this.moveClass.checkLocalMove(local, x, 0)){
-		return false;
-	}
-	for(var i = x; i > 0; i--){
-		moveAction = this.moveClass.doMoveAction(local, {x:i-1, y:y}, moveRecord);
-		if(moveAction !== this.moveClass.moveDefine.space){
-			break;
-		}
-	}
-	return this.moveClass.merge(local, moveRecord);
-}
-
-Tile.prototype.calculateMoveBottom = function(x, y){
-	var local = {x : 0, y : 0},
-	    moveStatus = false;
-	for(var y = 0; y < this.config.tilePoint.y; y++){
-		for(var x = 0; x < this.config.tilePoint.x; x++){
-			local.x = this.config.tilePoint.x - x - 1;
-			local.y = this.config.tilePoint.y - y - 1;
-			if(this.area[local.x][local.y] < 1){
-				continue;
-			}
-			moveStatus = this._calculateMoveBottom(local.x, local.y);
-		}
-	}
-	return moveStatus;
-}
-
-Tile.prototype._calculateMoveBottom = function(x, y){
-	var local = {x : x, y : y};
-	var moveRecord = {x : x, y : y};
-	var moveAction;
-	if(!this.moveClass.checkLocalMove(local, x, this.config.tilePoint.x-1)){
-		return false;
-	}
-	for(var i = x; i < this.config.tilePoint.x; i++){
-		if(i == this.config.tilePoint.x-1){
-			break;
-		}
-		moveAction = this.moveClass.doMoveAction(local, {x:i+1, y:y}, moveRecord);
-		if(moveAction !== this.moveClass.moveDefine.space){
-			break;
-		}
-	}
-	return this.moveClass.merge(local, moveRecord);
-}
 
 // Calculate width and height the point
 Tile.prototype.setCalculateLine = function(){
