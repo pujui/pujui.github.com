@@ -96,7 +96,8 @@ TileMove.prototype.cloneAreaToMoveLog = function (area)
 
 TileMove.prototype.calculateMoveRight = function(){
 	var local = {x : 0, y : 0},
-	    moveStatus = false;
+	    moveStatus = false,
+	    tempStatus;
 	for(var x = 0; x < this.master.config.tilePoint.x; x++){
 		for(var y = 0; y < this.master.config.tilePoint.y; y++){
 			local.x = this.master.config.tilePoint.x - x - 1;
@@ -104,7 +105,10 @@ TileMove.prototype.calculateMoveRight = function(){
 			if(this.master.area[local.x][local.y] < 1){
 				continue;
 			}
-			moveStatus = this._calculateMoveRight(local.x, local.y);
+			tempStatus = this._calculateMoveRight(local.x, local.y);
+			if(tempStatus === true){
+				moveStatus = true;
+			}
 		}
 	}
 	return moveStatus;
@@ -143,7 +147,10 @@ TileMove.prototype.calculateMoveLeft = function(){
 			if(this.master.area[local.x][local.y] < 1){
 				continue;
 			}
-			moveStatus = this._calculateMoveLeft(local.x, local.y);
+			tempStatus = this._calculateMoveLeft(local.x, local.y);
+			if(tempStatus === true){
+				moveStatus = true;
+			}
 		}
 	}
 	return moveStatus;
@@ -182,7 +189,10 @@ TileMove.prototype.calculateMoveTop = function(x, y){
 			if(this.master.area[local.x][local.y] < 1){
 				continue;
 			}
-			moveStatus = this._calculateMoveTop(local.x, local.y);
+			tempStatus = this._calculateMoveTop(local.x, local.y);
+			if(tempStatus === true){
+				moveStatus = true;
+			}
 		}
 	}
 	return moveStatus;
@@ -222,7 +232,10 @@ TileMove.prototype.calculateMoveBottom = function(x, y){
 			if(this.master.area[local.x][local.y] < 1){
 				continue;
 			}
-			moveStatus = this._calculateMoveBottom(local.x, local.y);
+			tempStatus = this._calculateMoveBottom(local.x, local.y);
+			if(tempStatus === true){
+				moveStatus = true;
+			}
 		}
 	}
 	return moveStatus;
@@ -254,7 +267,7 @@ TileMove.prototype._calculateMoveBottom = function(x, y){
 	return this.merge(local, moveRecord);
 }
 
-// render the move animation
+// Render the move animation
 TileMove.prototype.renderAnimation = function(flashBackground){
 	var area;
 	var context = this.master.node[0].getContext('2d');
@@ -289,7 +302,11 @@ TileMove.prototype.drawTile = function(context, local)
 {
 	if(local.value > 0){
 		// Draw graph number point
-		context.fillStyle = this.master.config.valueBgColor;
+		if(this.master.config.numberColorList[local.value]){
+			context.fillStyle = this.master.config.numberColorList[local.value];
+		}else{
+			context.fillStyle = this.master.config.valueBgColor;
+		}
 		context.fillRect(
 			local.y * this.master.line.x - this.master.config.LineWeight,
 			local.x * this.master.line.y - this.master.config.LineWeight,
@@ -346,6 +363,7 @@ TileMove.prototype.drawAllBackground = function(context)
 	}
 }
 
+// Save local move to target recodrs.
 TileMove.prototype.saveMoveLogs = function(cloneRecord, moveRecord, x, y){
 	cloneRecord.x = moveRecord.x;
 	cloneRecord.y = moveRecord.y;

@@ -10,6 +10,7 @@ function Tile(config){
 	this.area = [];
 	// Move object
 	this.moveClass = new TileMove(this);
+	// Move logs
 	this.moveLogs = [];
 	return this;
 }
@@ -35,6 +36,7 @@ Tile.prototype.init = function(){
 	this.render();
 	return this;
 }
+
 Tile.prototype.setDegreeOfDifficulty = function( event, target ){
 	var action = $(event).val();
 	if(action == '+'){
@@ -71,11 +73,11 @@ Tile.prototype.catchKeyDown = function( e ){
 	if(moveStatus == true){
 		this.createPoint();
 	}
-	// clear the move record
+	// Clear the move record
 	this.moveClass.clearRecord();
-	// active the move animation
+	// Active the move animation
 	this.moveClass.renderAnimation();
-	// check game mission success
+	// Check game mission success
 	this.processGameOver();
 }
 
@@ -152,7 +154,11 @@ Tile.prototype._createDiagram = function(context, x, y){
 	);
 	if(this.area[x][y] > 0){
 		// Draw graph number point
-		context.fillStyle = this.config.valueBgColor;
+		if(this.config.numberColorList[this.area[x][y]]){
+			context.fillStyle = this.config.numberColorList[this.area[x][y]];
+		}else{
+			context.fillStyle = this.config.valueBgColor;
+		}
 		context.fillRect(
 			y * this.line.x - this.config.LineWeight,
 			x * this.line.y - this.config.LineWeight,
@@ -189,6 +195,9 @@ Tile.prototype.processGameOver = function(){
 	}
 	if(missionSucceed === true){
 		alert('MISSION SUCCESS!!');
+		if(confirm('Increased difficulties?')){
+			// do something
+		}
 	}
 }
 

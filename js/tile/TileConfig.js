@@ -1,41 +1,53 @@
 /**
  * tileConfig
+ * 
  * @author Kim's
  */
 function tileConfig(config){
-	// 遊戲方格比
+	// Set area
 	this.tilePoint = {x: 5, y: 5};
-	// 文字顏色
+	// Set text color
 	this.textColor = "#ccc";
-	// 文字位置比重
+	// Set number bgcolor list
+	this.numberColorList = {
+		4		: "#FF00BF",
+		8		: "#BF00FF",
+		16		: "#0000FF",
+		32		: "#0080FF",
+		64		: "#00FFFF",
+		128		: "#00FF80",
+		256		: "#00FF00",
+		512		: "#BFFF00",
+		1024	: "#FFFF00",
+		2048	: "#2A120A"
+	};
+	// Set text weight
 	this.textLocalPower = {x : 0.3, y : 0.6};
-	// 數值背景顏色
+	// Set base background color.
 	this.valueBgColor = "#FF0000";
-	// 背景顏色
+	// Set background color.
 	this.bgColor = "#000";
-	// 邊框線條顏色
+	// Set border color.
 	this.LineColor = "#ccc";
-	// 邊框線比重 (先以px設計)
+	// The border(px)
 	this.LineWeight = 1;
-	// 目標 node
+	// Init document element.
 	this.target = config.target;
-	// 方塊出線的數值, 2的次方
+	// Set base random numbers.
 	this.tileNumbers = [2, 4];
-	// 過關數
+	//Pass the mission success.
 	if(typeof config.number !== 'undefined'){
 		this.number = config.number;
 	}else{
 		this.number = 2048;
 	}
-	
-	// 遊戲寬度
+	// Set width.
 	if(typeof config.width !== 'undefined'){
 		this.width = config.width;
 	}else{
 		this.width = 400;
 	}
-	
-	// 遊戲高度
+	// Set height.
 	if(typeof config.height !== 'undefined'){
 		this.height = config.height;
 	}else{
