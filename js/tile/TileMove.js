@@ -23,6 +23,11 @@ TileMove.prototype.merge = function(local, moveLocal){
 	}
 	this.master.area[moveLocal.x][moveLocal.y] = this.master.area[local.x][local.y];
 	this.master.area[local.x][local.y] = 0;
+	if(typeof this.moveRecords[moveLocal.x] !== "undefined" 
+		&& this.moveRecords[moveLocal.x][moveLocal.y]){
+		this.master.score += this.master.area[moveLocal.x][moveLocal.y];
+		this.master.updatedScore(this.master.score);
+	}
 	return true;
 }
 
@@ -314,12 +319,25 @@ TileMove.prototype.drawTile = function(context, local)
 			this.master.line.y - this.master.config.LineWeight
 		);
 		context.fillStyle = this.master.config.textColor;
-		context.font = "30px Georgia";
-		context.fillText(
-			local.value,
-			( local.y + this.master.config.textLocalPower.x ) * this.master.line.x,
-			( local.x + this.master.config.textLocalPower.y ) * this.master.line.y
-		);
+		var stringLen = (local.value+'').length;
+		if(this.master.config.textFontList[stringLen]){
+			context.font = this.master.config.textFontList[stringLen];
+		}else{
+			context.font = this.master.config.textFont;
+		}
+		if(this.master.config.textLocalPowerList[stringLen]){
+			context.fillText(
+				local.value,
+				( local.y + this.master.config.textLocalPowerList[stringLen].x ) * this.master.line.x,
+				( local.x + this.master.config.textLocalPowerList[stringLen].y ) * this.master.line.y
+			);
+		}else{
+			context.fillText(
+				local.value,
+				( local.y + this.master.config.textLocalPower.x ) * this.master.line.x,
+				( local.x + this.master.config.textLocalPower.y ) * this.master.line.y
+			);
+		}
 	}else{
 		// Draw graph empty point
 		context.fillStyle = this.master.config.bgColor;

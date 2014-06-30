@@ -23,6 +23,17 @@ function tileConfig(config){
 	};
 	// Set text weight
 	this.textLocalPower = {x : 0.3, y : 0.6};
+	this.textLocalPowerList = {
+		4 : {x : 0.1, y : 0.6},
+		5 : {x : 0.1, y : 0.6},
+		6 : {x : 0.1, y : 0.6}
+	};
+	this.textFont = '30px Georgia';
+	this.textFontList = {
+		4 : '25px Georgia',
+		5 : '20px Georgia',
+		6 : '15px Georgia'
+	};
 	// Set base background color.
 	this.valueBgColor = "#FF0000";
 	// Set background color.
@@ -34,7 +45,7 @@ function tileConfig(config){
 	// Init document element.
 	this.target = config.target;
 	// Set base random numbers.
-	this.tileNumbers = [2, 4];
+	this.tileNumbers = [2, 4, 1024, 16384];
 	//Pass the mission success.
 	if(typeof config.number !== 'undefined'){
 		this.number = config.number;

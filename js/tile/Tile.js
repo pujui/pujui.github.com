@@ -12,11 +12,15 @@ function Tile(config){
 	this.moveClass = new TileMove(this);
 	// Move logs
 	this.moveLogs = [];
+	// Obtain score
+	this.score = 0;
 	return this;
 }
 
+// test for debug
 Tile.prototype.isDebug = true;
 
+// Initalize
 Tile.prototype.init = function(){
 	this.node = $(this.config.target);
 	// Setting width and height the game area
@@ -37,15 +41,14 @@ Tile.prototype.init = function(){
 	return this;
 }
 
-Tile.prototype.setDegreeOfDifficulty = function( event, target ){
-	var action = $(event).val();
+// set difficulty the game
+Tile.prototype.setDegreeOfDifficulty = function( action ){
 	if(action == '+'){
 		this.config.number *= 2;
 	}else if(action == '-'){
 		this.config.number /= 2;
 	}
-	$(target).val(this.config.number);
-	this.log();
+	this.updatedDifficulty(this.config.number);
 }
 
 // Catch move event
@@ -66,6 +69,7 @@ Tile.prototype.catchKeyDown = function( e ){
 			moveStatus = master.moveClass.calculateMoveBottom();
 		},
 	};
+	// If keydown not 37 to 40 then exit.
 	if(!action[e.keyCode]){
 		return;
 	}
@@ -77,7 +81,7 @@ Tile.prototype.catchKeyDown = function( e ){
 	this.moveClass.clearRecord();
 	// Active the move animation
 	this.moveClass.renderAnimation();
-	// Check game mission success
+	// Check mission success
 	this.processGameOver();
 }
 
@@ -135,55 +139,16 @@ Tile.prototype.randNumber = function(maxLength){
 // Flash canvas
 Tile.prototype.render = function(){
 	var context = this.node[0].getContext('2d');
+	this.moveClass.drawAllBackground(context);
+	
 	for(var x = 0; x < this.config.tilePoint.x; x++){
 		for(var y = 0; y < this.config.tilePoint.y; y++){
-			this._createDiagram(context, x, y);
+			this.moveClass.drawTile(context, {x:x, y:y, value: this.area[x][y]});
 		}
 	}
 }
 
-// Draw tile
-Tile.prototype._createDiagram = function(context, x, y){
-	// Draw graph border
-	context.fillStyle = this.config.LineColor;
-	context.fillRect(
-		y * this.line.x,
-		x * this.line.y,
-		this.line.x,
-		this.line.y
-	);
-	if(this.area[x][y] > 0){
-		// Draw graph number point
-		if(this.config.numberColorList[this.area[x][y]]){
-			context.fillStyle = this.config.numberColorList[this.area[x][y]];
-		}else{
-			context.fillStyle = this.config.valueBgColor;
-		}
-		context.fillRect(
-			y * this.line.x - this.config.LineWeight,
-			x * this.line.y - this.config.LineWeight,
-			this.line.x - this.config.LineWeight,
-			this.line.y - this.config.LineWeight
-		);
-		context.fillStyle = this.config.textColor;
-		context.font = "30px Georgia";
-		context.fillText(
-			this.area[x][y],
-			( y + this.config.textLocalPower.x ) * this.line.x,
-			( x + this.config.textLocalPower.y ) * this.line.y
-		);
-	}else{
-		// Draw graph empty point
-		context.fillStyle = this.config.bgColor;
-		context.fillRect(
-			y * this.line.x - this.config.LineWeight,
-			x * this.line.y - this.config.LineWeight,
-			this.line.x - this.config.LineWeight,
-			this.line.y - this.config.LineWeight
-		);
-	}
-}
-
+// Check mission success
 Tile.prototype.processGameOver = function(){
 	var missionSucceed = false;
 	for(var x = 0; x < this.config.tilePoint.x; x++){
@@ -199,6 +164,16 @@ Tile.prototype.processGameOver = function(){
 			// do something
 		}
 	}
+}
+
+// Updated score.
+Tile.prototype.updatedScore = function(){
+	// do something
+}
+
+// Updated Difficulty.
+Tile.prototype.updatedDifficulty = function(number){
+	// do something
 }
 
 // show log
