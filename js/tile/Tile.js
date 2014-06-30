@@ -43,6 +43,9 @@ Tile.prototype.init = function(){
 
 // set difficulty the game
 Tile.prototype.setDegreeOfDifficulty = function( action ){
+	if(this.config.number>=50000000 || this.config.number<=1){
+		return;
+	}
 	if(action == '+'){
 		this.config.number *= 2;
 	}else if(action == '-'){
