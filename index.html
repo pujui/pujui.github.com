@@ -1,45 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title>4096 tile game</title>
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-	<script type="text/javascript" src="js/tile/Tile.js"></script>
-	<script type="text/javascript" src="js/tile/TileMove.js"></script>
-	<script type="text/javascript" src="js/tile/TileConfig.js"></script>
-	<style type="text/css">
-	#tile {
-		border: 1px solid black;
-	}
-	</style>
+    <meta charset="UTF-8">
+    <title>4096 tile game</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="js/tile/Tile.js"></script>
+    <script type="text/javascript" src="js/tile/TileMove.js"></script>
+    <script type="text/javascript" src="js/tile/TileConfig.js"></script>
+    <style type="text/css">
+    #tile {
+        border: 1px solid black;
+    }
+    </style>
 </head>
 <body>
     SCORE：<b id="score" >0</b>&nbsp;，&nbsp;
-	遊戲難度：<input type="text" readonly value="4096" id="number" />
-	<input type="button" value="+" class="dod" />
-	<input type="button" value="-" class="dod" />
-	<br/>
-	<canvas id="tile" ></canvas>
+    遊戲難度：<input type="text" readonly value="4096" id="number" />
+    <input type="button" value="+" class="dod" />
+    <input type="button" value="-" class="dod" />
+    <br/>
+    <canvas id="tile" ></canvas>
 </body>
 <script type="text/javascript" >
 var tile;
 $(document).ready(function() {
-	
-	var config = new tileConfig({ target : '#tile', number : 4096});
-	
-	tile = new Tile(config).init();
-	
-	$('.dod').click(function(){
-		tile.setDegreeOfDifficulty($(this).val());
-	});
-	
-	tile.updatedDifficulty = function(number){
-		$('#number').val(number);
-	}
-	
-	tile.updatedScore = function(score){
-		$('#score').text(score);
-	}
+    
+    var config = new tileConfig({ target : '#tile', number : 4096});
+    
+    tile = new Tile(config).init();
+    
+    $('.dod').click(function(){
+        tile.setDegreeOfDifficulty($(this).val());
+    });
+    
+    tile.updatedDifficulty = function(number){
+        $('#number').val(number);
+    }
+    
+    tile.updatedScore = function(score){
+        $('#score').text(score);
+    }
 });
 </script>
 </html>
