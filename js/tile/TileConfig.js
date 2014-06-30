@@ -45,7 +45,7 @@ function tileConfig(config){
 	// Init document element.
 	this.target = config.target;
 	// Set base random numbers.
-	this.tileNumbers = [2, 4, 1024, 16384];
+	this.tileNumbers = [2, 4];
 	//Pass the mission success.
 	if(typeof config.number !== 'undefined'){
 		this.number = config.number;
