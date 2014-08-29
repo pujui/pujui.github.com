@@ -34,4 +34,12 @@ synchronous.start(synchronous.runInt);
 synchronous.sleep(synchronous.runInt);
 // do something
 console.log('end:'+synchronous.runInt);
+
+
+console.log('start');
+synchronous.runInt = setTimeout(run, 1000);
+synchronous.start(synchronous.runInt);
+synchronous.sleep(synchronous.runInt);
+// do something
+console.log('end:'+synchronous.runInt);
 </script>
