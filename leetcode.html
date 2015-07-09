@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>leetcode test</title>
+    </head> 
+    
+    <body>
+        <a href="https://leetcode.com/problems/second-highest-salary/">https://leetcode.com/problems/second-highest-salary/</a>
+        <pre>
+        SELECT MAX(E.Salary)
+        FROM
+            Employee E
+            INNER JOIN ( SELECT MAX(Salary) Salary FROM Employee ) M ON M.Salary > E.Salary
+        ---------------------------------------------------------------------------------------
+        SELECT MAX(t.Salary)
+        FROM
+        (
+          SELECT DISTINCT E.Salary
+          FROM Employee E
+          ORDER BY E.Salary DESC 
+          LIMIT 1,1
+        ) t
+        </pre>
+        <hr/>
+        <a href="https://leetcode.com/problems/edit-distance/">https://leetcode.com/problems/edit-distance/</a>
+        <pre>
+        var minDistance = function(word1, word2) {
+            var word1Length = word1.length;
+            var word2Length = word2.length;
+            
+            if(word1Length < 1 || word2Length < 1) return Math.max(word1Length, word2Length);
+            
+            var distance = [], i, j, iWord, d;
+            
+            for(i = 0; i <= word1Length; i++){
+                if(!distance[i]) distance[i] = [];
+                distance[i][0] = i;
+            }
+            
+            for(j = 0; j <= word2Length; j++) distance[0][j] = j;
+            
+            for(i = 0; i < word1Length; i++){
+                iWord = word1[i];
+                for(j = 0; j < word2Length; j++){
+                    d = distance[i][j];
+                    if(iWord == word2[j]){
+                        distance[i+1][j+1] = d;
+                    }else{
+                        distance[i+1][j+1] = Math.min( Math.min(distance[i+1][j]+1, distance[i][j+1]+1), d+1);
+                    }
+                }
+            }
+            return distance[word1Length][word2Length];
+        };
+        </pre>
+        <hr/>
+        <a href="https://leetcode.com/problems/department-top-three-salaries/">https://leetcode.com/problems/department-top-three-salaries/</a>
+        <pre>
+        SELECT E.Department, E.Employee, E.Salary
+        FROM
+            ( SELECT @num := 0, @type := '', @money=0) r,
+            ( SELECT
+                    E.Department,
+                    E.Employee,
+                    E.Salary,
+                    @num := IF(@type = E.DepartmentId, IF(@money=E.Salary, @num, @num+ 1), 1) AS row_number,
+                    @type := E.DepartmentId,
+                    @money := E.Salary
+                FROM
+                    (
+                        SELECT 
+                            E.Name AS Employee, 
+                            E.Salary, 
+                            E.DepartmentId, 
+                            D.Name AS Department
+                        FROM
+                            Employee E
+                            INNER JOIN Department D ON D.Id=E.DepartmentId
+                        ORDER BY E.DepartmentId, E.salary DESC
+                    ) E
+            ) E
+        WHERE E.row_number <= 3
+        </pre>
+    </body>
+</html>
