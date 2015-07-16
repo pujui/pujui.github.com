@@ -5,6 +5,26 @@
     </head> 
     
     <body>
+        <a href="https://leetcode.com/problems/rank-scores/">https://leetcode.com/problems/rank-scores/</a>
+        <pre>
+        SELECT S.Score, S.rank
+        FROM
+            ( SELECT @nowRank := 0, @nowScore := -1) r,
+            ( SELECT
+                    S.Score,
+                    @nowRank := IF(@nowScore = S.Score, @nowRank, @nowRank + 1) AS rank,
+                    @nowScore := S.Score
+                FROM
+                    (
+                        SELECT 
+                            S.Score
+                        FROM
+                            Scores S
+                        ORDER BY S.Score DESC
+                    ) S
+            ) S
+        </pre>
+        <hr/>
         <a href="https://leetcode.com/problems/second-highest-salary/">https://leetcode.com/problems/second-highest-salary/</a>
         <pre>
         SELECT MAX(E.Salary)
