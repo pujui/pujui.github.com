@@ -5,6 +5,33 @@
     </head> 
     
     <body>
+        <a href="https://leetcode.com/problems/maximal-square/" >https://leetcode.com/problems/maximal-square/</a>
+        <pre>
+        var maximalSquare = function(matrix) {
+     
+            if(!matrix || !matrix.length) return 0;
+            
+            var mLength = matrix.length;
+            
+            var nLength = matrix[0].length;
+            
+            var i, j, r = 0;
+            
+            for(i = 0; i < mLength; i++){
+                for(j = 0; j < nLength; j++){
+                    if(matrix[i][j] == '0'){
+                        continue;
+                    }else if(i === 0 || j === 0){
+                        r = Math.max(r, matrix[i][j]);
+                        continue;
+                    }
+                    matrix[i][j] = Math.min(matrix[i-1][j-1], matrix[i-1][j], matrix[i][j-1]) + 1;
+                    r = Math.max(r, matrix[i][j]);
+                }
+            }
+            return r * r;
+        };
+        </pre>
         <a href="https://leetcode.com/problems/search-a-2d-matrix-ii/" >https://leetcode.com/problems/search-a-2d-matrix-ii/</a>
         <pre>
         var searchMatrix = function(matrix, target) {
