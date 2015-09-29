@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Insert title here</title>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    </head>
+    <body>
+        <div id="moveData" >
+            <div>
+                <input type="checkbox" value="1" /><span>checkbox 1</span>
+            </div>
+            <div>
+                <input type="checkbox" value="2" /><span>checkbox 2</span>
+            </div>
+            <div>
+                <input type="checkbox" value="3" /><span>checkbox 3</span>
+            </div>
+            <div>
+                <input type="checkbox" value="4" /><span>checkbox 4</span>
+            </div>
+            <div>
+                <input type="checkbox" value="5" /><span>checkbox 5</span>
+            </div>
+        </div>
+        <input type="button" value="上移" class="prev" />
+        <input type="button" value="下移" class="next" />
+        <script type="text/javascript" >
+        /**
+        jquery 基本說明
+	        <div></div> => $(div) 指定位置
+	        <div id="move" ></div> => $('#move') 指定位置
+	        <div class="move" ></div> => $('.move') or $('div.move') 指定位置
+	        <div class="move" ><a></a></div> => $('div > a') 找自己得下一層
+        */
+        var moveCheckBox = {};
+        $( document ).ready(function() {
+            
+            moveCheckBox.prev = function(){
+                // https://api.jquery.com/find/
+            	// https://api.jquery.com/closest/
+                var moveRows = $('#moveData').find('div > input[type=checkbox]:checked')
+                                             .closest('div');
+                // 如果沒有半筆打勾直接終止
+                if(moveRows.length < 1) return;
+                
+                // 開始執行迴圈 - 將每一筆打勾的移動
+                moveRows.each(function(){
+                    /*--- 單筆處理 ---*/
+                    
+                    // step1  找不到打勾位置的上一筆, 則直接終止
+                    // https://api.jquery.com/prev/
+                    if($(this).prev('div').length < 1){
+                        return;
+                    }
+                    
+                    // step2  找到打勾位置的上一筆直接, 將自己往找到的目標往上移
+                    // before 插入元素上方
+                    /**
+                     * ex:
+                            <div tag="1" ></div>   // 發現自己的上方
+                            <div tag="2" ></div>   // 自己
+                            <div tag="3" ></div>
+                        run 移動後
+	                        <div tag="2" ></div>   // 自己
+	                        <div tag="1" ></div>   // 發現自己的上方
+	                        <div tag="3" ></div>
+                            
+                     **/
+                     // https://api.jquery.com/before/
+                    $(this).prev('div').before(this);
+
+                    /*--- 結束單筆處理 ---*/
+                });
+                // 結束迴圈
+                   
+            }
+            
+            moveCheckBox.next = function (){
+            	
+                // https://api.jquery.com/closest/
+                // https://api.jquery.com/find/
+                var moveRows = $('#moveData').find('div > input[type=checkbox]:checked')
+                                             .closest('div');
+                // 如果沒有半筆打勾直接終止
+                if(moveRows.length < 1) return;
+                
+                // 先組成陣列, 再將其顛倒
+                var reverseRows = [];
+                moveRows.each(function(){
+                	reverseRows.push(this);
+                });
+                // 顛倒陣列, 原因如果勾選兩個連續 
+                // ex: 1234 移動34後還是34
+                // 1 2 3 4 => 1 2 4 3(移動到4後) => 1 2 3 4(移動到3後)
+                reverseRows.reverse();
+                
+                // 開始執行迴圈 - 將每一筆打勾的移動
+                $.each(reverseRows, function(){
+                    console.log(this);
+                    
+                    // step1  找不到打勾位置下一筆, 則直接終止
+                    // https://api.jquery.com/next/
+                    if($(this).next('div').length < 1){
+                        return;
+                    }
+
+                    // step2 找到打勾位置的下一筆直接, 將自己往找到的目標移下移
+                    // after 插入元素下方
+                    /**
+                     * ex:
+                            <div tag="1" ></div>   
+                            <div tag="2" ></div>   // 自己
+                            <div tag="3" ></div>   // 發現自己的下方
+                        run 移動後
+                            <div tag="1" ></div>   
+                            <div tag="3" ></div>   // 發現自己的下方
+                            <div tag="2" ></div>   // 自己
+                            
+                     **/
+                     // https://api.jquery.com/after/
+                    $(this).next('div').after(this);
+                    
+                });
+                // 結束迴圈
+            }
+
+            $('input.prev').click(moveCheckBox.prev);
+            $('input.next').click(moveCheckBox.next);
+            
+        });
+        </script>
+    </body>
+</html>
