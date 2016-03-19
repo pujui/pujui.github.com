@@ -19,17 +19,17 @@
     遊戲難度：<input type="text" readonly value="4096" id="number" />
     <input type="button" value="+" class="dod" />
     <input type="button" value="-" class="dod" />
-    <br/>
+    <br/><br/>
     <canvas id="tile" ></canvas>
     <br/>
-    <div>
-    <input type="button" value="↑" keydownV="38" class="keydown" style="width: 80px; height: 80px; margin-left: 84px; margin-bottom: 4px;"/>
-    <br/>
-    <input type="button" value="←" keydownV="37" class="keydown" style="width: 80px; height: 80px;"/>
-    <input type="button" value="↓" keydownV="40" class="keydown" style="width: 80px; height: 80px;"/>
-    <input type="button" value="→" keydownV="39" class="keydown" style="width: 80px; height: 80px;"/>
+    *鍵盤控制方向
+    <div style="margin-left: 40px;">
+        <input type="button" value="↑" keydownV="38" class="keydown" style="width: 80px; height: 80px; margin-left: 84px; margin-bottom: 4px;"/>
+        <br/>
+        <input type="button" value="←" keydownV="37" class="keydown" style="width: 80px; height: 80px;"/>
+        <input type="button" value="↓" keydownV="40" class="keydown" style="width: 80px; height: 80px;"/>
+        <input type="button" value="→" keydownV="39" class="keydown" style="width: 80px; height: 80px;"/>
     </div>
-    沒鍵盤將就點用...
     <br/>
     <br/>
     <a class="btn btn-primary" target="_blank" href="https://github.com/pujui/NumberTileGame">View Project <span class="glyphicon glyphicon-chevron-right"></span></a>
@@ -54,7 +54,7 @@ $(document).ready(function() {
         $('#score').text(score);
     }
     $('.keydown').click(function(){
-        tile.catchKeyDown({keyCode: $(this).attr('keydownV')});
+        tile.catchKeyDown({keyCode: $(this).attr('keydownV')}); 
     });
 });
 </script>
