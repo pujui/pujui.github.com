@@ -1,0 +1,38 @@
+--Line Config
+ChannelID       = 'xxxxxx'
+ChannelSecret   = 'xxxxxx'
+MID             = 'xxxxxx'
+
+reply           = request.query.reply
+message         = 'You have a new mail :\n' 
+                                    .. 'Date :  ' .. request.query.date
+                                    .. '\nFrom :  '.. request.query.from
+                  .. '\nMessage :  \n    ' 
+                                    .. request.query.message
+
+
+--sending messages for line
+data = {
+    ['to'] = {reply},
+    ['toChannel'] = '1383378250', -- 固定値
+    ['eventType'] = '138311608800106203', -- 固定値
+    ['content'] = {
+        ['contentType'] = 1,
+        ['toType'] = 1,
+        ['text'] = message
+    }
+}
+
+local response = http.request {
+    url = 'https://trialbot-api.line.me/v1/events',
+    method = 'POST',
+    data = json.stringify(data),
+    headers = {
+        ['Content-Type'] = 'application/json; charser=UTF-8',
+        ['X-Line-ChannelID'] = ChannelID,
+        ['X-Line-ChannelSecret'] = ChannelSecret,
+        ['X-Line-Trusted-User-With-ACL'] = MID
+    }
+}
+
+return true

@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <script src="js/GmailConfig.js"></script>
+    <script src="js/GmailAuth.js"></script>
+    <script src="js/testNotifyEasy.js"></script>
+    <script src="https://apis.google.com/js/client.js?onload=checkAuth"></script>
+    <script type="text/javascript">
+        var gmailAuth = new GmailAuth(GmailConfig);
+    </script>
+  </head>
+  <body>
+    <span>Notify New Message By Gmail - TEST V1</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <!--Button for the user to click to initiate auth sequence -->
+    <button id="authorize-button" onclick="gmailAuth.handle(event)">Authorize</button>
+    <button id="start-notify-button" disabled onclick="start_notify(); alert('start');">Start Notify</button>
+    <button id="stop-notify-button" disabled onclick="stop_notify(); alert('stop');">Stop Notify</button>
+    <hr/>
+    Your Line ID :<input type="text" id="yourLineId" value="xxxxxx" size="200"/>
+    <pre id="output"></pre>
+    <pre id="outputData"></pre>
+  </body>
+</html>
